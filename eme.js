@@ -308,14 +308,10 @@ function SetupEME(test, token, params)
     session.addEventListener("message", function(ev) {
       var msgEventType = ev.messageType;
       var msgStr = ArrayBufferToString(ev.message);
-      alert(msgEventType);
+      console.log(msgEventType);
       if (msgEventType == 'individualization-request') {
         // Do the certification process.
-        var hexdata = "CloKTAgAEkgAAAACAAARXQ9aL4UJuxMWk6VBJtJmQFvDG5KCvrnekVrVVELgu2UQRBOdi1QAtxuTB1ESiuHV6LCKbYyX4hvrJR10Ul_kZ5gSBCLtrXMaBAgAEgASIKyq-sLxkgm1Hk6Pn3mjMBY9ECYxRnrdOnER5Lg8L-O1";
-        var urlBase = "https://www.googleapis.com/certificateprovisioning/v1/devicecertificates/create?key=AIzaSyB-5OLKTx2iU5mko18DfdwK5611JIjbUhE&signedRequest=";
-        //urlBase += msgStr;
-        // For testing
-        var url = urlBase + hexdata;
+        var url = msgStr;
         var headers = new Map();
         headers.set("Content-type", "application/json");
         headers.set("Accept", "*/*");
@@ -323,13 +319,8 @@ function SetupEME(test, token, params)
         headers.set("Content-length", 0);
         HttpRequest('POST', url, headers, function(evt) {//Call a function when the state changes.
           if(evt.target.readyState == 4 && evt.target.status == 200) {
-              console.log('!!!!!!!!!!!!!individualization-request OK');
-              console.log(evt.target.response);
-              alert(evt.target.response);
-              // Set the cert into mediaKeys instance.
-              // https://dxr.mozilla.org/mozilla-central/source/dom/webidl/MediaKeys.webidl#23
-              // Browser will crash when invoke this function....
-              // v.mediaKeys.setServerCertificate(evt.target.response);
+              console.log(' >>>>>>>>>>>>> individualization-request OK <<<<<<<<<<<<<<');
+              v.mediaKeys.setServerCertificate(evt.target.response);
           }
           else {
             console.log('individualization-request failed with status = ' + evt.target.status + " , response = " + evt.target.response);
